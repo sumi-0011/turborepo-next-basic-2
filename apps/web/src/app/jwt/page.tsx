@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import router from 'next/router';
-import styled from 'styled-components';
+import { useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import router from "next/router";
+import styled from "styled-components";
 
-import { checkUsedCouponsByToken } from '@/apis/user/getUsedCoupons';
-import { useLogin } from '@/store/user';
+import { checkUsedCouponsByToken } from "@/apis/user/getUsedCoupons";
+import { useLogin } from "@/store/user";
 
 function JWTPage() {
   const searchParams = useSearchParams();
@@ -14,20 +14,21 @@ function JWTPage() {
 
   const onLogin = useCallback(
     async (jwtToken: string) => {
-      const token = jwtToken.split(' ')[1];
+      const token = jwtToken.split(" ")[1];
+      if (!token) return;
       await login(token);
 
       if (await checkUsedCouponsByToken(token)) {
-        router.replace('/mypage');
+        router.replace("/mypage");
       } else {
-        router.replace('/start');
+        router.replace("/start");
       }
     },
-    [login],
+    [login]
   );
 
   useEffect(() => {
-    const jwtToken = searchParams?.get('jwt') || '';
+    const jwtToken = searchParams?.get("jwt") || "";
     if (!jwtToken) return;
 
     onLogin(jwtToken as string);
